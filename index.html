@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumi AI Camera Project Brief for Ingenic</title>
+  <style>
+    :root {
+      --lumi-green: #008C4F;
+      --lumi-green-dark: #008047;
+      --jade: #00B26B;
+      --tech: #008697;
+      --warm: #F2DEA6;
+      --ink: #414042;
+      --muted: #6e7472;
+      --line: #dce5df;
+      --paper: #ffffff;
+      --soft: #f5f8f6;
+      --soft-green: #e7f5ee;
+      --danger: #90181B;
+      --shadow: 0 24px 70px rgba(27, 48, 39, .13);
+      --radius: 8px;
+      --font: "SVN-Gilroy", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 8%, rgba(0, 140, 79, .08), transparent 28%),
+        linear-gradient(135deg, #f7faf8 0%, #eef5f1 48%, #ffffff 100%);
+      font-family: var(--font);
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .deck-shell {
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 18px;
+      background: rgba(255, 255, 255, .82);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--lumi-green);
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.05;
+    }
+
+    .brand-text span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 6px 9px;
+      border-radius: var(--radius);
+      color: #53615b;
+      font-size: 13px;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      color: var(--lumi-green-dark);
+      background: var(--soft-green);
+    }
+
+    .nav-index {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-weight: 700;
+      color: var(--lumi-green);
+    }
+
+    .nav-caption {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .controls {
+      position: fixed;
+      right: 26px;
+      bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 12px 32px rgba(39, 55, 48, .12);
+      backdrop-filter: blur(14px);
+      z-index: 10;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--lumi-green);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background .18s ease, transform .18s ease;
+    }
+
+    .icon-btn:hover {
+      background: var(--lumi-green-dark);
+      transform: translateY(-1px);
+    }
+
+    .progress-label {
+      min-width: 52px;
+      color: #53615b;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 28px 34px 72px;
+    }
+
+    .slide {
+      position: relative;
+      display: grid;
+      align-content: center;
+      min-height: calc(100vh - 56px);
+      margin: 0 auto 28px;
+      padding: clamp(28px, 4vw, 54px);
+      overflow: hidden;
+      border: 1px solid rgba(0, 140, 79, .13);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: var(--shadow);
+      scroll-margin-top: 28px;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      bottom: -120px;
+      width: 320px;
+      height: 320px;
+      border: 34px solid rgba(0, 140, 79, .07);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .slide-kicker {
+      margin: 0 0 12px;
+      color: var(--lumi-green);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      color: #26342e;
+      font-size: clamp(46px, 6vw, 76px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      max-width: 920px;
+      margin-bottom: 24px;
+      color: #26342e;
+      font-size: clamp(30px, 4.2vw, 52px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .lead {
+      max-width: 860px;
+      color: #53615b;
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.45;
+    }
+
+    .hero {
+      min-height: calc(100vh - 56px);
+      padding: 0;
+      background: #fff;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(360px, .85fr) minmax(420px, 1.15fr);
+      min-height: inherit;
+    }
+
+    .hero-copy {
+      display: grid;
+      align-content: center;
+      padding: clamp(34px, 5vw, 70px);
+      z-index: 1;
+    }
+
+    .hero-copy .lead {
+      max-width: 620px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      background: var(--soft);
+    }
+
+    .hero-visual img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .12) 38%, rgba(255, 255, 255, 0));
+      z-index: 1;
+    }
+
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 140, 79, .24);
+      color: var(--lumi-green-dark);
+      background: rgba(255, 255, 255, .86);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .metric {
+      min-height: 124px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--lumi-green);
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1;
+    }
+
+    .metric span {
+      color: #596761;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .product {
+      min-height: 310px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff, #f7faf8);
+    }
+
+    .camera-visual {
+      display: grid;
+      place-items: center;
+      height: 132px;
+      margin-bottom: 18px;
+      border-radius: var(--radius);
+      background: var(--soft-green);
+    }
+
+    .camera-svg {
+      width: 120px;
+      height: 96px;
+    }
+
+    .product p {
+      margin-bottom: 0;
+      color: #63706b;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(14px, 1.35vw, 17px);
+    }
+
+    th,
+    td {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.35;
+    }
+
+    th {
+      color: #20342b;
+      background: var(--soft-green);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .info-panel {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .info-panel p {
+      color: #63706b;
+      font-size: 16px;
+      line-height: 1.48;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .feature-list li {
+      position: relative;
+      padding: 13px 14px 13px 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      color: #55625d;
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .feature-list li::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--lumi-green);
+      box-shadow: 0 0 0 5px rgba(0, 140, 79, .12);
+    }
+
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .market-card {
+      min-height: 178px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff, #f7faf8);
+    }
+
+    .market-card strong {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--lumi-green);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .market-card p {
+      margin-bottom: 0;
+      color: #63706b;
+      font-size: 15px;
+      line-height: 1.42;
+    }
+
+    .ai-card {
+      min-height: 130px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .priority {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--lumi-green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .priority.p1 {
+      background: var(--tech);
+    }
+
+    .priority.p2 {
+      background: #6f7c77;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      min-height: 160px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      width: 12px;
+      height: 2px;
+      background: var(--lumi-green);
+    }
+
+    .flow-step b {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--lumi-green);
+    }
+
+    .flow-step p {
+      margin: 0;
+      color: #63706b;
+      font-size: 14px;
+      line-height: 1.42;
+    }
+
+    .cta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 22px;
+      align-items: center;
+      padding: 26px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: linear-gradient(135deg, var(--lumi-green), var(--tech));
+    }
+
+    .cta h3 {
+      font-size: clamp(22px, 3vw, 34px);
+    }
+
+    .cta p {
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, .84);
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .cta-badge {
+      display: grid;
+      place-items: center;
+      width: 154px;
+      aspect-ratio: 1;
+      border: 2px solid rgba(255, 255, 255, .52);
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .source-note {
+      margin-top: 18px;
+      color: #74807b;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1100px) {
+      html {
+        scroll-padding-top: 120px;
+      }
+
+      .deck-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        inset: 0 0 auto 0;
+        height: auto;
+        padding: 10px 14px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        margin-bottom: 8px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .nav a {
+        grid-template-columns: auto;
+        min-width: 42px;
+        padding: 5px;
+      }
+
+      .nav-caption {
+        display: none;
+      }
+
+      main {
+        padding: 110px 16px 78px;
+      }
+
+      .hero-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 360px;
+      }
+
+      .slide {
+        scroll-margin-top: 120px;
+      }
+
+      .metric-grid,
+      .product-grid,
+      .ai-grid,
+      .market-grid,
+      .flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow-step::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 680px) {
+      main {
+        padding-inline: 10px;
+      }
+
+      .slide {
+        min-height: auto;
+        padding: 24px 18px;
+      }
+
+      .metric-grid,
+      .product-grid,
+      .ai-grid,
+      .market-grid,
+      .flow,
+      .cta {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      h2 {
+        font-size: 31px;
+      }
+
+      .controls {
+        right: 12px;
+        bottom: 12px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .deck-shell {
+        display: block;
+      }
+
+      .sidebar,
+      .controls {
+        display: none;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      .slide {
+        min-height: 100vh;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-shell">
+    <aside class="sidebar" aria-label="Slide navigation">
+      <a class="brand" href="#slide-1" aria-label="Back to first slide">
+        <span class="brand-mark">L</span>
+        <span class="brand-text">
+          <strong>Lumi</strong>
+          <span>AI Camera Brief</span>
+        </span>
+      </a>
+      <nav class="nav" id="deckNav">
+        <a href="#slide-1" class="active"><span class="nav-index">1</span><span class="nav-caption">Project Goal</span></a>
+        <a href="#slide-2"><span class="nav-index">2</span><span class="nav-caption">Executive Numbers</span></a>
+        <a href="#slide-3"><span class="nav-index">3</span><span class="nav-caption">Why Lumi</span></a>
+        <a href="#slide-4"><span class="nav-index">4</span><span class="nav-caption">Product Line</span></a>
+        <a href="#slide-5"><span class="nav-index">5</span><span class="nav-caption">Target Platform</span></a>
+        <a href="#slide-6"><span class="nav-index">6</span><span class="nav-caption">Hardware</span></a>
+        <a href="#slide-7"><span class="nav-index">7</span><span class="nav-caption">AI Scope</span></a>
+        <a href="#slide-8"><span class="nav-index">8</span><span class="nav-caption">Responsibilities</span></a>
+        <a href="#slide-9"><span class="nav-index">9</span><span class="nav-caption">Requested Support</span></a>
+        <a href="#slide-10"><span class="nav-index">10</span><span class="nav-caption">Key Questions</span></a>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="slide hero" id="slide-1" data-slide>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="slide-kicker">For Ingenic Partnership Discussion</p>
+            <h1>Lumi AI Camera Project</h1>
+            <p class="lead">A T32Pro-based AI camera product line for Vietnam smart homes, built by Lumi with Ingenic platform and ecosystem support.</p>
+            <div class="hero-chips" aria-label="Project highlights">
+              <span class="chip">T32Pro</span>
+              <span class="chip">1TOPS INT8</span>
+              <span class="chip">2K / 4K</span>
+              <span class="chip">PoE</span>
+              <span class="chip">IP67</span>
+              <span class="chip">Vietnam R&D</span>
+            </div>
+          </div>
+          <div class="hero-visual" aria-label="AI camera concept product lineup">
+            <img src="assets/lumi-ai-camera-lineup-concept.png" alt="Concept render of Lumi AI camera product family: bullet, dome, turret, and compact indoor camera">
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-2" data-slide>
+        <p class="slide-kicker">Executive Numbers</p>
+        <h2>Clear commercial target, clear platform ask.</h2>
+        <div class="metric-grid">
+          <div class="metric"><strong>50K</strong><span>First-year volume target</span></div>
+          <div class="metric"><strong>$25-35</strong><span>Target BOM range by 2K/4K option</span></div>
+          <div class="metric"><strong>6-7 mo</strong><span>Development timeline target</span></div>
+          <div class="metric"><strong>VN</strong><span>Vietnam market, factory and nationwide channel</span></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-3" data-slide>
+        <p class="slide-kicker">Why Lumi</p>
+        <h2>A strong local partner to turn T32Pro into a scalable Vietnam product line.</h2>
+        <div class="market-grid">
+          <article class="market-card"><strong>R&D</strong><h3>Local Product Ownership</h3><p>Lumi can own firmware, AI modules, product customization and long-term platform improvement.</p></article>
+          <article class="market-card"><strong>FAC</strong><h3>Vietnam Factory</h3><p>Final assembly, product testing, quality control and faster pilot-to-mass-production iteration.</p></article>
+          <article class="market-card"><strong>CH</strong><h3>Nationwide Distribution</h3><p>Dealer, installer and project channels across Vietnam help accelerate commercial rollout.</p></article>
+          <article class="market-card"><strong>SH</strong><h3>Smart Home Leadership</h3><p>AI cameras become a natural extension of Lumi's existing smart home ecosystem.</p></article>
+          <article class="market-card"><strong>PRJ</strong><h3>Large Project Experience</h3><p>Practical Vietnam deployment experience supports expansion beyond residential use.</p></article>
+          <article class="market-card"><strong>EXP</strong><h3>Expansion Path</h3><p>Building, office, hospital, school, urban and smart city solutions are the next growth areas.</p></article>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-4" data-slide>
+        <p class="slide-kicker">Product Line</p>
+        <h2>Four camera forms from one common platform direction.</h2>
+        <div class="product-grid">
+          <article class="product">
+            <div class="camera-visual">
+              <svg class="camera-svg" viewBox="0 0 160 120" role="img" aria-label="Bullet camera illustration">
+                <rect x="44" y="34" width="78" height="42" rx="8" fill="#fff" stroke="#008C4F" stroke-width="4"/>
+                <circle cx="110" cy="55" r="14" fill="#26342e"/>
+                <rect x="24" y="47" width="24" height="16" rx="5" fill="#008C4F"/>
+                <path d="M54 76l-18 26" stroke="#414042" stroke-width="7" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Outdoor Bullet</h3>
+            <p>Villa, gate, yard, perimeter. PoE, IP67, night vision, AI detection.</p>
+          </article>
+          <article class="product">
+            <div class="camera-visual">
+              <svg class="camera-svg" viewBox="0 0 160 120" role="img" aria-label="Dome camera illustration">
+                <path d="M42 62a38 38 0 0176 0v10H42z" fill="#fff" stroke="#008C4F" stroke-width="4"/>
+                <path d="M34 72h92v11a10 10 0 01-10 10H44a10 10 0 01-10-10z" fill="#fff" stroke="#008C4F" stroke-width="4"/>
+                <circle cx="80" cy="64" r="14" fill="#26342e"/>
+              </svg>
+            </div>
+            <h3>Outdoor Dome</h3>
+            <p>Residential and light commercial use. PoE, IP67, compact design.</p>
+          </article>
+          <article class="product">
+            <div class="camera-visual">
+              <svg class="camera-svg" viewBox="0 0 160 120" role="img" aria-label="Turret camera illustration">
+                <circle cx="80" cy="62" r="38" fill="#fff" stroke="#008C4F" stroke-width="4"/>
+                <circle cx="82" cy="62" r="21" fill="#f5f8f6" stroke="#008C4F" stroke-width="4"/>
+                <circle cx="82" cy="62" r="11" fill="#26342e"/>
+                <path d="M48 92h64" stroke="#414042" stroke-width="7" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3>Outdoor Turret</h3>
+            <p>Balanced outdoor installation. Easy installation, PoE, IP67, AI detection.</p>
+          </article>
+          <article class="product">
+            <div class="camera-visual">
+              <svg class="camera-svg" viewBox="0 0 160 120" role="img" aria-label="Indoor compact camera illustration">
+                <rect x="54" y="24" width="52" height="62" rx="18" fill="#fff" stroke="#008C4F" stroke-width="4"/>
+                <circle cx="80" cy="52" r="15" fill="#26342e"/>
+                <path d="M68 88h24l7 20H61z" fill="#fff" stroke="#008C4F" stroke-width="4" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Indoor Compact</h3>
+            <p>Small size, family safety, two-way audio, AI detection.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-5" data-slide>
+        <p class="slide-kicker">Target Platform</p>
+        <h2>Ingenic T32Pro is the proposed common SoC platform.</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Item</th><th>Target Requirement</th></tr></thead>
+            <tbody>
+              <tr><td>Main SoC</td><td>Ingenic T32Pro</td></tr>
+              <tr><td>AI Performance</td><td>1TOPS INT8 NPU</td></tr>
+              <tr><td>Video Capability</td><td>4K support, with 2K and 4K product options</td></tr>
+              <tr><td>BOM Range</td><td>USD 25-35 depending on resolution and hardware options</td></tr>
+              <tr><td>Ownership Model</td><td>Lumi owns firmware, AI modules, cloud/app integration, final assembly, product testing and quality control</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="source-note">Reference checked from Ingenic public product page: T32Pro supports 4K 30fps and 1TOPS INT8 AI capability.</p>
+      </section>
+
+      <section class="slide" id="slide-6" data-slide>
+        <p class="slide-kicker">Hardware Requirements</p>
+        <h2>Outdoor-ready hardware with audio and night operation built in.</h2>
+        <div class="two-col">
+          <div class="info-panel">
+            <h3>Required</h3>
+            <ul class="feature-list">
+              <li>PoE for outdoor models</li>
+              <li>IP67 outdoor protection</li>
+              <li>IR LEDs for night vision</li>
+              <li>White or warm supplemental light</li>
+              <li>Built-in microphone and speaker</li>
+              <li>Two-way audio and warning sound</li>
+            </ul>
+          </div>
+          <div class="info-panel">
+            <h3>Options / Exclusions</h3>
+            <ul class="feature-list">
+              <li>microSD card optional</li>
+              <li>2K and 4K hardware options</li>
+              <li>No LTE/4G in this phase</li>
+              <li>No battery and no solar in this phase</li>
+              <li>Final assembly and product test at Lumi factory in Vietnam</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-7" data-slide>
+        <p class="slide-kicker">AI Feature Scope</p>
+        <h2>Start with reliable edge AI. Keep advanced video understanding for later.</h2>
+        <div class="ai-grid">
+          <article class="ai-card"><span class="priority">P0</span><h3>Human Detection</h3><p>On-device AI for smart notifications and automation triggers.</p></article>
+          <article class="ai-card"><span class="priority">P0</span><h3>Event Filtering</h3><p>Reduce false alarms using AI + local event logic.</p></article>
+          <article class="ai-card"><span class="priority p1">P1</span><h3>Pet / Object Detection</h3><p>On-device detection for richer smart home scenarios.</p></article>
+          <article class="ai-card"><span class="priority p1">P1</span><h3>Face Detection</h3><p>Edge AI capability, with Face ID depending on SDK and privacy design.</p></article>
+          <article class="ai-card"><span class="priority p1">P1/P2</span><h3>Smoke / Fire</h3><p>Requires model benchmark and validation before market commitment.</p></article>
+          <article class="ai-card"><span class="priority p2">Future</span><h3>Video Understanding</h3><p>Hybrid AI phase, not required for first mass-production release.</p></article>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-8" data-slide>
+        <p class="slide-kicker">Ownership Model</p>
+        <h2>Lumi owns the product experience. Ingenic accelerates platform readiness.</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Area</th><th>Lumi Responsibility</th><th>Expected Ingenic Support</th></tr></thead>
+            <tbody>
+              <tr><td>Hardware</td><td>Final product selection, assembly, factory test</td><td>Qualified partners for PCBA, sensor, lens, PoE, housing, IR/light, audio, fixtures</td></tr>
+              <tr><td>BSP / Firmware</td><td>Firmware development and customization</td><td>Full BSP/SDK, build documentation, media pipeline samples, secure boot and OTA guidance</td></tr>
+              <tr><td>Rust Modules</td><td>Application-layer module development</td><td>Toolchain confirmation or stable C/C++ APIs for Rust FFI</td></tr>
+              <tr><td>AI Module</td><td>Own and improve AI modules</td><td>Magik/AIE SDK, model zoo, conversion tools, quantization guide, benchmark reports</td></tr>
+              <tr><td>Cloud / App</td><td>Lumi responsibility</td><td>No cloud/app integration required</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-9" data-slide>
+        <p class="slide-kicker">Requested Support</p>
+        <h2>What Lumi needs from Ingenic to compress development time.</h2>
+        <div class="flow">
+          <div class="flow-step"><b>1</b><h3>Partners</h3><p>Introduce partners for complete hardware ecosystem and assembly-ready components.</p></div>
+          <div class="flow-step"><b>2</b><h3>Reference Design</h3><p>T32Pro camera design with PoE, IR, audio, speaker and SD option.</p></div>
+          <div class="flow-step"><b>3</b><h3>SDK</h3><p>BSP source, build guide, sample apps, AI SDK, model samples and conversion tools.</p></div>
+          <div class="flow-step"><b>4</b><h3>Factory Tools</h3><p>Flashing, calibration, FCT, aging, traceability and QC procedure.</p></div>
+          <div class="flow-step"><b>5</b><h3>Engineering</h3><p>Fast EVT/DVT/PVT technical support for a 6-7 month development timeline.</p></div>
+        </div>
+      </section>
+
+      <section class="slide" id="slide-10" data-slide>
+        <p class="slide-kicker">Discussion Questions</p>
+        <h2>Key questions for Ingenic in the first technical meeting.</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Topic</th><th>Question</th></tr></thead>
+            <tbody>
+              <tr><td>T32Pro Variant</td><td>Which exact T32Pro part number is recommended for PoE AI camera with 2K/4K options?</td></tr>
+              <tr><td>BOM</td><td>Can the full BOM target of USD 25-35 be achieved for 2K and 4K versions?</td></tr>
+              <tr><td>AI</td><td>Which human, pet, face and object models are already validated on T32Pro?</td></tr>
+              <tr><td>Audio</td><td>Does the platform support stable two-way audio with AEC/ANR/AGC?</td></tr>
+              <tr><td>PoE / IP67</td><td>Can Ingenic recommend proven PoE suppliers and IP67 bullet/dome/turret housing partners?</td></tr>
+              <tr><td>Mass Production</td><td>What factory tools and QC process can be transferred to Lumi?</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cta" style="margin-top: 22px;">
+          <div>
+            <h3>Desired Outcome</h3>
+            <p>Build a reliable, cost-effective and AI-ready camera line for Vietnam smart homes, then scale into building, office, hospital, school, urban and smart city solutions.</p>
+          </div>
+          <div class="cta-badge">50,000<br>pcs</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="controls" aria-label="Slide controls">
+    <button class="icon-btn" type="button" id="prevSlide" aria-label="Previous slide">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="progress-label" id="progressLabel">1 / 10</span>
+    <button class="icon-btn" type="button" id="nextSlide" aria-label="Next slide">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll("[data-slide]"));
+    const links = Array.from(document.querySelectorAll(".nav a"));
+    const progress = document.getElementById("progressLabel");
+    let current = 0;
+
+    function setActive(index) {
+      current = Math.max(0, Math.min(slides.length - 1, index));
+      links.forEach((link, i) => link.classList.toggle("active", i === current));
+      progress.textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    function go(index) {
+      const target = Math.max(0, Math.min(slides.length - 1, index));
+      slides[target].scrollIntoView({ behavior: "smooth", block: "start" });
+      setActive(target);
+    }
+
+    document.getElementById("prevSlide").addEventListener("click", () => go(current - 1));
+    document.getElementById("nextSlide").addEventListener("click", () => go(current + 1));
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown") go(current + 1);
+      if (event.key === "ArrowLeft" || event.key === "PageUp") go(current - 1);
+      if (event.key === "Home") go(0);
+      if (event.key === "End") go(slides.length - 1);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      const index = slides.indexOf(visible.target);
+      if (index >= 0) setActive(index);
+    }, { threshold: [0.45, 0.7] });
+
+    slides.forEach(slide => observer.observe(slide));
+  </script>
+</body>
+</html>
