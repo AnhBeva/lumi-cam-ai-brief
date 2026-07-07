@@ -740,8 +740,21 @@
     }
 
     @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      html,
       body {
         background: #fff;
+        width: 16in;
+        height: 9in;
       }
 
       .deck-shell {
@@ -758,11 +771,15 @@
       }
 
       .slide {
-        min-height: 100vh;
+        width: 16in;
+        height: 9in;
+        min-height: 9in;
         margin: 0;
         border: 0;
+        border-radius: 0;
         box-shadow: none;
         page-break-after: always;
+        break-after: page;
       }
     }
   </style>
